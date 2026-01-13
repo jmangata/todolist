@@ -8,6 +8,13 @@ const FormAdd = () => {
     
     const addTodo = () => {
     //déclaration d'une fonction pour ajouter une tache 
+     
+    // Formatage d'une nouvelle tache          
+      const newTodo = {
+              id: Date.now().toString(),
+              title: textTache,
+              completed: false,
+            };
     console.log("textTache")
 
     }//end addtodo
