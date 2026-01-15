@@ -1,28 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Define a Task type for clarity
-interface Task {
-  id: string;
-  title: string;
-  completed?: boolean;
-}
-
-const initialState: Task[] = [];
 
 export const taskSlice = createSlice({
   name: 'task',
-  initialState,
+  initialState:[],
   reducers: {
-    ajouter: (state, action: PayloadAction<Task>) => {
+    ajouter: (state, actions) => {
       // add new task
-      state.push(action.payload);
+      console.log('actions ajouter:', actions.payload)
+      const newState = [...state, actions.payload]
+      return newState
+      
     },
-    modifier: (state, action: PayloadAction<Task>) => {
-      const idx = state.findIndex((t) => t.id === action.payload.id);
-      if (idx !== -1) state[idx] = { ...state[idx], ...action.payload };
+
+    modifier: (state, actions ) => {
+    
+    const id = actions.payload
+    console.log()
+
+    return state.map((item) =>
+                        item.id === id ? { ...item, completed: !item.completed } : item
+                    )
+                    
     },
-    supprimer: (state, action: PayloadAction<string>) => {
-      return state.filter((t) => t.id !== action.payload);
+    supprimer: (state, actions) => {
+      console.log('supprimer la tache', actions.payload)
+      const newState = state.filter(item=>item.id != actions.payload) 
+      return newState;
     },
   },
 });

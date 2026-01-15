@@ -1,11 +1,16 @@
-import {  Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { styles } from '@/app/(tabs)/styles'
+import { useDispatch } from 'react-redux'
+import { ajouter } from '@/app/store/slices/taskSlice'
+
 
 const FormAdd = () => {
     // declaration de la variable 
     const [textTache, setTextTache] = useState('')
     
+  const dispatch = useDispatch();
+
     const addTodo = () => {
     //déclaration d'une fonction pour ajouter une tache 
      
@@ -15,7 +20,9 @@ const FormAdd = () => {
               title: textTache,
               completed: false,
             };
-    console.log("textTache")
+      dispatch(ajouter(newTodo))
+      setTextTache('')
+            console.log('newTodo:', newTodo)
 
     }//end addtodo
 
