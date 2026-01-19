@@ -3,16 +3,21 @@ import React from 'react'
 import { styles } from '@/app/(tabs)/styles'
 import { useDispatch } from 'react-redux'
 import { modifier, supprimer } from '@/app/store/slices/taskSlice'
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Reanimated, {
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 const ItemTasks = ({ task }) => {
 
   const dispatch = useDispatch() //pour ecrire dans le store
 
   const toggleTodo = (id) => {
-    
+
     dispatch(modifier(id))
-    
-    
+
+
 
   }
   const deleteTodo = (id) => {
@@ -20,38 +25,63 @@ const ItemTasks = ({ task }) => {
     console.log(id)
 
   }
-  return (
-    <View style={styles.todoItem}>
-      <TouchableOpacity
-        style={styles.checkbox}
-        onPress={() => toggleTodo(task.id)}
-      >
-        <View
-          style={[
-            styles.checkboxInner,
-            task.completed && styles.checkboxChecked,
-          ]}
-        >
-          {task.completed && <Text style={styles.checkmark}>✓</Text>}
-        </View>
-      </TouchableOpacity>
+  const RightAction = () => {
+    return (
+      <View style={styles.rightAction}> 
+    <TouchableOpacity
+      style={styles.deleteBtn}
+      onPress={() => deleteTodo(task.id)}
+    >
+      <Text style={styles.deleteText}>✕</Text>
+    </TouchableOpacity>
+  
+    
 
-      <Text
+
+
+
+    <TouchableOpacity
+      style={styles.checkbox}
+      onPress={() => toggleTodo(task.id)}
+    >
+      <View
         style={[
-          styles.todoText,
-          task.completed && styles.todoTextCompleted,
+          styles.checkboxInner,
+          task.completed && styles.checkboxChecked,
         ]}
       >
-        {task.title}
-      </Text>
-
-      <TouchableOpacity
-        style={styles.deleteBtn}
-        onPress={() => deleteTodo(task.id)}
+        {task.completed && <Text style={styles.checkmark}>✓</Text>}
+      </View>
+    </TouchableOpacity>
+     </View>
+    
+    )
+  }
+ 
+  return (
+    <ReanimatedSwipeable
+      containerStyle={styles.todoItem}
+      friction={2}
+      enableTrackpadTwoFingerGesture
+      rightThreshold={40}
+      leftThreshold={40}
+      renderRightActions={RightAction}
       >
-        <Text style={styles.deleteText}>✕</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.todoItem}>
+
+
+        <Text
+          style={[
+            styles.todoText,
+            task.completed && styles.todoTextCompleted,
+          ]}
+        >
+          {task.title}
+        </Text>
+
+
+      </View>
+    </ReanimatedSwipeable>
   )
 }
 
