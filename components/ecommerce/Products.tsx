@@ -1,52 +1,61 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { stylesEcommerce } from './stylesEcommerce'
-import CardProduct from './CardProduct'
-import axios from 'axios'
-
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import CardProduct from './CardProduct';
+import { stylesEcommerce } from './stylesEcommerce';
 
 const Products = () => {
-  //initialisation des variable locale (state)
+    // Initialisation des variables locale (state)
+    const [dataProducts, setDataProducts] = useState([]) ; // tableau de la liste des produits
+    const [loading , setLoading] = useState(true) ;
 
-  // tableau de la liste des produits
-  const [dataProducts, setDataProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-// chargement des données dans l'api
+    // chargement des données de l'api 
 
-const loadData = async () => {
-//lecture a de l'API
-setLoading(true)
+    const loadData = async () => { 
 
-//changement etat de chargement 
-const query = await axios.get("https://fakestoreapi.com/products")
-//chargement des données dans la flatlist 
+        //changement état du chargement
+        setLoading(true) ;
 
-setDataProducts(query.data)
-//fin de changement 
-setLoading(false)
+        // requete sur l'api
+        const query = await axios.get("https://fakestoreapi.com/products") ;
 
-}
+        //  chargement des données dans la flatlist
+        setDataProducts(query.data) ;
 
-useEffect(() => {
-  loadData()
-},[]) // au chargement du composant fais moi loaddata
+        // fin de chargement
+      setTimeout(()=>{
+        setLoading(false)
+      },1500)
+
+
+     }
+
+   useEffect(()=>{
+
+    loadData() ;
+
+   },[]) // [] au chargement du composant
+
+
   return (
     <View style={stylesEcommerce.container}>
       <Text>Products</Text>
-      {loading ? <ActivityIndicator /> :
 
-        <FlatList
-          data={dataProducts}
-          numColumns={2}
-          keyExtractor={(item) => item.id()}
-          renderItem={({ item }) => <CardProduct /> }
 
-          
-        />}
+        {loading ? 
+            <ActivityIndicator /> 
+            :
+            <FlatList 
+                data={dataProducts}
+                numColumns={2}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({item})=> <CardProduct products={item} /> }
+
+            />
+        }
+
     </View>
   )
 }
 
 export default Products
-
-const styles = StyleSheet.create({})
